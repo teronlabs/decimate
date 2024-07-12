@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https:#www.gnu.org/licenses/>.
 
-from decimate.deci import result_open, result_sort, result_print, failTable
+from decimate.deci import result_open, result_sort, result_print, failTable, result_min_pass_level
 import json
 import random
 import os
@@ -49,3 +49,8 @@ print("\n\n\n ABBREVIATED FORMAT   and   ONLY PRINTING PLATFORM 'Existing'\n\n\n
 result_print(results, failTable, minTests=5, printLowRounds=False, platformList=['Existing'], 
              printSet={'roundPass', 'passList', 'datestamp'}, 
              shortDatestamp=False, printAllIndividTests=False)
+
+
+[minPassingDecLevel, minPassingStarDecLevel] = \
+    result_min_pass_level(results, maxFails=failTable, minTests=5, checkLowRounds=True, platformList=['Existing'], dateRange=["",""])
+print(f"Minimum passing decimation levels for platform 'Existing' are {minPassingDecLevel} (min of 5 tests) \n\tand {minPassingStarDecLevel} (no minimum number of tests). ")
