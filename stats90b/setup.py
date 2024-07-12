@@ -32,5 +32,9 @@ setup(
     name='stats90b',
     version='1.1.7.post1',
     description='A Python C-extension to run the NIST SP 800-90B IID statistical tests',
+    author='Teron Labs and NIST', 
+    author_email='yvonne@teronlabs.com',
+    license = "Files authored by NIST are released under NIST's license. Files authored by Teron Labs are released under the GNU General Public License v3.0 (GPLv3).",
     ext_modules=[module],
+    url='https://www.teronlabs.com',
 )
