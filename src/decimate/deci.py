@@ -1603,7 +1603,8 @@ def decimated_range_test(delta_path, results_path, overwrite=False, platform="",
     # Use dec to store the decimation level we are currently testing 
     # (or more accurately the multiple of the dec_multiplier that we are currently testing)
     # Start at the largest possible decimation level.
-    for dec in range(maxDec//dec_multiplier, ceil(minDec/dec_multiplier) - 1, -1):
+
+    for dec in range(maxDec//dec_multiplier, max(ceil(minDec/dec_multiplier) - 1, 0), -1):
 
         # Test this level.
 
