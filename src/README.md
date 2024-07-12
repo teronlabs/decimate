@@ -25,6 +25,7 @@ Before using `decimate`, the IID testing from  NIST's C++ SP800-90B_EntropyAsses
 
 2. Ensure `pip` and `setuptools` are installed.
     ```console
+    $ sudo apt update
     $ sudo apt install python3-pip
     $ sudo pip install -U setuptools
     ```
