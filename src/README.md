@@ -28,6 +28,8 @@ Before using `decimate`, the IID testing from  NIST's C++ SP800-90B_EntropyAsses
     $ sudo apt update
     $ sudo apt install python3-pip
     $ sudo pip install -U setuptools
+    $ python3 -m pip install build
+    $ apt install python3.10-venv
     ```
 
 3. In the `stats90b` directory, run Python on `setup.py` with option `build`, then run again with option `install`, e.g.
