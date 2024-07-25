@@ -309,6 +309,7 @@ def unchanged(delta):
 * Parameters:
     * in_path: Path to decimated deltas; deltas must be 1 byte each, ready for the NIST tool to read.
     * results_path: The path of the file where results should be written as they are generated.
+        * WARNING: If you are running multiple tests concurrently (e.g. using this library in multiple terminals simultaneously), use a different results_path for each concurrent test.
     * overwrite: When True, overwrite the contents of the results_path. When False, read the results_path, append the results generated, and then write them to the results_path.
     * platform: A string that describes the data being tested, e.g. the OE name, project name, etc.
     * dec: The decimation level being tested. This has no impact on the testing run, since in_path is already decimated, but is recorded as part of the results.
@@ -336,6 +337,7 @@ def unchanged(delta):
         * If overwrite==False, the previous content of results_path is also written to the results_path.
         * The result of testing this decimation level is in the last item of the results list in the results_path.
         * Results are written and overwritten as they are generated, so if the testing is killed before it completes, all results generated so far may be read from results_path.
+        * No other process should attempt to write to results_path while this function is running to avoid loss of data.
 * Usage:
 
     (failure, totalPasses, totals, roundPassCount, roundTotalCount) = test_decimated_file(in_path, results_path, overwrite="", platform="<unspecified>", dec=0, numTests=1, maxFails=failTable, setSize=1000000, verboseRounds=True, verboseFinal=False, failEarly=False, messageStart="", messageEnd="", IIDtests="")
@@ -346,6 +348,7 @@ def unchanged(delta):
 * Parameters:
     * delta_path: The path of the file containing the un-decimated deltas.
     * results_path: The path of the file where results should be written as they are generated.
+        * WARNING: If you are running multiple tests concurrently (e.g. using this library in multiple terminals simultaneously), use a different results_path for each concurrent test.
     * overwrite: When True, overwrite the contents of the results_path. When False, read the results_path, append the results generated and then write them to the results_path.
     * platform: A string that describes the data being tested, e.g. the OE name, project name, etc.
     * maxDec: The maximum decimation level to test.
@@ -376,6 +379,7 @@ def unchanged(delta):
         * results in the format of exampleResultsList will be written to the results_path. If overwrite==False, the previous contents of results_path is also written.
         *The result of testing carried out by this function is appended at the end of the results list in the results_path, but may consist of more than one list item.
         * Results are written and overwritten as they are generated, so if the testing is killed before it completes, all results generated so far may be read from results_path.
+        * No other process should attempt to write to results_path while this function is running to avoid loss of data.
 * Usage:
 
     results, datestampList, passed, best_decimation_level = decimated_binary_search(delta_path, results_path, overwrite=False, platform="", maxDec=200, minDec=1, numTestsRequested=1, maxFails=failTable, testSize=1000000, dec_multiplier=1, input_delta_bytes=1, convert_delta=unchanged, byte_order='little', verbose=False, failEarly=False, IIDtests="")
@@ -386,6 +390,7 @@ def unchanged(delta):
 * Parameters:
     * delta_path: The path of the file containing the un-decimated deltas.
     * results_path: The path of the file where results should be written as they are generated.
+        * WARNING: If you are running multiple tests concurrently (e.g. using this library in multiple terminals simultaneously), use a different results_path for each concurrent test.
     * overwrite: When True, overwrite the contents of the results_path. When False, read the results_path, append the results generated and then write them to the results_path.
     * platform: A string that describes the data being tested, e.g. the OE name, project name, etc.
     * maxDec: The maximum decimation level to test.
@@ -416,6 +421,7 @@ def unchanged(delta):
         * results in the format of exampleResultsList will be written to the results_path. If overwrite==False, the previous contents of results_path is also written.
         *The result of testing carried out by this function is appended at the end of the results list in the results_path, but may consist of more than one list item.
         * Results are written and overwritten as they are generated, so if the testing is killed before it completes, all results generated so far may be read from results_path.
+        * No other process should attempt to write to results_path while this function is running to avoid loss of data.
 * Usage:
 
     results, datestampList, passed, best_decimation_level = decimated_range_test(delta_path, results_path, overwrite=False, platform="", maxDec=200, minDec=1, numTestsRequested=1, maxFails=failTable, testSize=1000000, dec_multiplier=1, input_delta_bytes=1, convert_delta=unchanged, byte_order='little', verbose=False, failEarly=False, IIDtests="")
