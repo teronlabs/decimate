@@ -1,0 +1,786 @@
+[
+     {
+          "dec": 10,
+          "passList": {
+               "chiSqIndependence": [
+                    5,
+                    5
+               ],
+               "chiSqGoodnessFit": [
+                    5,
+                    5
+               ],
+               "longestRepeatedSubstring": [
+                    5,
+                    5
+               ],
+               "excursion": [
+                    5,
+                    5
+               ],
+               "numDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "lenDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "numIncreasesDecreases": [
+                    5,
+                    5
+               ],
+               "numRunsMedian": [
+                    5,
+                    5
+               ],
+               "lenRunsMedian": [
+                    5,
+                    5
+               ],
+               "avgCollision": [
+                    5,
+                    5
+               ],
+               "maxCollision": [
+                    5,
+                    5
+               ],
+               "periodicity(1)": [
+                    5,
+                    5
+               ],
+               "periodicity(2)": [
+                    5,
+                    5
+               ],
+               "periodicity(8)": [
+                    5,
+                    5
+               ],
+               "periodicity(16)": [
+                    5,
+                    5
+               ],
+               "periodicity(32)": [
+                    5,
+                    5
+               ],
+               "covariance(1)": [
+                    5,
+                    5
+               ],
+               "covariance(2)": [
+                    5,
+                    5
+               ],
+               "covariance(8)": [
+                    5,
+                    5
+               ],
+               "covariance(16)": [
+                    5,
+                    5
+               ],
+               "covariance(32)": [
+                    5,
+                    5
+               ],
+               "compression": [
+                    5,
+                    5
+               ]
+          },
+          "roundPass": 5,
+          "roundTotal": 5,
+          "platform": "Existing",
+          "filename": "./data/Example_decimate_bin_search_Mod4_relationship.bin",
+          "datestamp": "2024-07-12 21:43:28.426288"
+     },
+     {
+          "dec": 5,
+          "passList": {
+               "chiSqIndependence": [
+                    5,
+                    5
+               ],
+               "chiSqGoodnessFit": [
+                    5,
+                    5
+               ],
+               "longestRepeatedSubstring": [
+                    5,
+                    5
+               ],
+               "excursion": [
+                    5,
+                    5
+               ],
+               "numDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "lenDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "numIncreasesDecreases": [
+                    5,
+                    5
+               ],
+               "numRunsMedian": [
+                    5,
+                    5
+               ],
+               "lenRunsMedian": [
+                    5,
+                    5
+               ],
+               "avgCollision": [
+                    5,
+                    5
+               ],
+               "maxCollision": [
+                    5,
+                    5
+               ],
+               "periodicity(1)": [
+                    5,
+                    5
+               ],
+               "periodicity(2)": [
+                    5,
+                    5
+               ],
+               "periodicity(8)": [
+                    5,
+                    5
+               ],
+               "periodicity(16)": [
+                    5,
+                    5
+               ],
+               "periodicity(32)": [
+                    5,
+                    5
+               ],
+               "covariance(1)": [
+                    5,
+                    5
+               ],
+               "covariance(2)": [
+                    5,
+                    5
+               ],
+               "covariance(8)": [
+                    5,
+                    5
+               ],
+               "covariance(16)": [
+                    5,
+                    5
+               ],
+               "covariance(32)": [
+                    5,
+                    5
+               ],
+               "compression": [
+                    5,
+                    5
+               ]
+          },
+          "roundPass": 5,
+          "roundTotal": 5,
+          "platform": "Existing",
+          "filename": "./data/Example_decimate_bin_search_Mod4_relationship.bin",
+          "datestamp": "2024-07-12 21:44:11.826831"
+     },
+     {
+          "dec": 3,
+          "passList": {
+               "chiSqIndependence": [
+                    2,
+                    5
+               ],
+               "chiSqGoodnessFit": [
+                    2,
+                    2
+               ],
+               "longestRepeatedSubstring": [
+                    2,
+                    2
+               ],
+               "excursion": [
+                    2,
+                    2
+               ],
+               "numDirectionalRuns": [
+                    0,
+                    2
+               ],
+               "lenDirectionalRuns": [
+                    2,
+                    2
+               ],
+               "numIncreasesDecreases": [
+                    2,
+                    2
+               ],
+               "numRunsMedian": [
+                    0,
+                    2
+               ],
+               "lenRunsMedian": [
+                    2,
+                    2
+               ],
+               "avgCollision": [
+                    1,
+                    2
+               ],
+               "maxCollision": [
+                    2,
+                    2
+               ],
+               "periodicity(1)": [
+                    0,
+                    2
+               ],
+               "periodicity(2)": [
+                    2,
+                    2
+               ],
+               "periodicity(8)": [
+                    2,
+                    2
+               ],
+               "periodicity(16)": [
+                    2,
+                    2
+               ],
+               "periodicity(32)": [
+                    2,
+                    2
+               ],
+               "covariance(1)": [
+                    0,
+                    2
+               ],
+               "covariance(2)": [
+                    2,
+                    2
+               ],
+               "covariance(8)": [
+                    2,
+                    2
+               ],
+               "covariance(16)": [
+                    2,
+                    2
+               ],
+               "covariance(32)": [
+                    2,
+                    2
+               ],
+               "compression": [
+                    0,
+                    2
+               ]
+          },
+          "roundPass": 0,
+          "roundTotal": 5,
+          "platform": "Existing",
+          "filename": "./data/Example_decimate_bin_search_Mod4_relationship.bin",
+          "datestamp": "2024-07-12 21:58:21.643623"
+     },
+     {
+          "dec": 4,
+          "passList": {
+               "chiSqIndependence": [
+                    5,
+                    5
+               ],
+               "chiSqGoodnessFit": [
+                    5,
+                    5
+               ],
+               "longestRepeatedSubstring": [
+                    5,
+                    5
+               ],
+               "excursion": [
+                    5,
+                    5
+               ],
+               "numDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "lenDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "numIncreasesDecreases": [
+                    5,
+                    5
+               ],
+               "numRunsMedian": [
+                    5,
+                    5
+               ],
+               "lenRunsMedian": [
+                    5,
+                    5
+               ],
+               "avgCollision": [
+                    5,
+                    5
+               ],
+               "maxCollision": [
+                    5,
+                    5
+               ],
+               "periodicity(1)": [
+                    5,
+                    5
+               ],
+               "periodicity(2)": [
+                    5,
+                    5
+               ],
+               "periodicity(8)": [
+                    5,
+                    5
+               ],
+               "periodicity(16)": [
+                    5,
+                    5
+               ],
+               "periodicity(32)": [
+                    5,
+                    5
+               ],
+               "covariance(1)": [
+                    5,
+                    5
+               ],
+               "covariance(2)": [
+                    5,
+                    5
+               ],
+               "covariance(8)": [
+                    5,
+                    5
+               ],
+               "covariance(16)": [
+                    5,
+                    5
+               ],
+               "covariance(32)": [
+                    5,
+                    5
+               ],
+               "compression": [
+                    5,
+                    5
+               ]
+          },
+          "roundPass": 5,
+          "roundTotal": 5,
+          "platform": "Existing",
+          "filename": "./data/Example_decimate_bin_search_Mod4_relationship.bin",
+          "datestamp": "2024-07-12 21:59:25.135555"
+     },
+     {
+          "dec": 10,
+          "passList": {
+               "chiSqIndependence": [
+                    5,
+                    5
+               ],
+               "chiSqGoodnessFit": [
+                    5,
+                    5
+               ],
+               "longestRepeatedSubstring": [
+                    5,
+                    5
+               ],
+               "excursion": [
+                    5,
+                    5
+               ],
+               "numDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "lenDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "numIncreasesDecreases": [
+                    5,
+                    5
+               ],
+               "numRunsMedian": [
+                    5,
+                    5
+               ],
+               "lenRunsMedian": [
+                    5,
+                    5
+               ],
+               "avgCollision": [
+                    5,
+                    5
+               ],
+               "maxCollision": [
+                    5,
+                    5
+               ],
+               "periodicity(1)": [
+                    5,
+                    5
+               ],
+               "periodicity(2)": [
+                    5,
+                    5
+               ],
+               "periodicity(8)": [
+                    5,
+                    5
+               ],
+               "periodicity(16)": [
+                    5,
+                    5
+               ],
+               "periodicity(32)": [
+                    5,
+                    5
+               ],
+               "covariance(1)": [
+                    5,
+                    5
+               ],
+               "covariance(2)": [
+                    5,
+                    5
+               ],
+               "covariance(8)": [
+                    5,
+                    5
+               ],
+               "covariance(16)": [
+                    5,
+                    5
+               ],
+               "covariance(32)": [
+                    5,
+                    5
+               ],
+               "compression": [
+                    5,
+                    5
+               ]
+          },
+          "roundPass": 5,
+          "roundTotal": 5,
+          "platform": "4 dependent",
+          "filename": "./data/Example_decimate_bin_search_Mod4_relationship.bin",
+          "datestamp": "2024-07-12 22:23:15.947519"
+     },
+     {
+          "dec": 10,
+          "passList": {
+               "chiSqIndependence": [
+                    5,
+                    5
+               ],
+               "chiSqGoodnessFit": [
+                    5,
+                    5
+               ],
+               "longestRepeatedSubstring": [
+                    5,
+                    5
+               ],
+               "excursion": [
+                    5,
+                    5
+               ],
+               "numDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "lenDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "numIncreasesDecreases": [
+                    5,
+                    5
+               ],
+               "numRunsMedian": [
+                    5,
+                    5
+               ],
+               "lenRunsMedian": [
+                    5,
+                    5
+               ],
+               "avgCollision": [
+                    5,
+                    5
+               ],
+               "maxCollision": [
+                    5,
+                    5
+               ],
+               "periodicity(1)": [
+                    5,
+                    5
+               ],
+               "periodicity(2)": [
+                    5,
+                    5
+               ],
+               "periodicity(8)": [
+                    5,
+                    5
+               ],
+               "periodicity(16)": [
+                    5,
+                    5
+               ],
+               "periodicity(32)": [
+                    5,
+                    5
+               ],
+               "covariance(1)": [
+                    5,
+                    5
+               ],
+               "covariance(2)": [
+                    5,
+                    5
+               ],
+               "covariance(8)": [
+                    5,
+                    5
+               ],
+               "covariance(16)": [
+                    5,
+                    5
+               ],
+               "covariance(32)": [
+                    5,
+                    5
+               ],
+               "compression": [
+                    5,
+                    5
+               ]
+          },
+          "roundPass": 5,
+          "roundTotal": 5,
+          "platform": "4 dependent",
+          "filename": "./data/Example_decimate_bin_search_Mod4_relationship.bin",
+          "datestamp": "2024-07-12 22:23:50.717092"
+     },
+     {
+          "dec": 5,
+          "passList": {
+               "chiSqIndependence": [
+                    5,
+                    5
+               ],
+               "chiSqGoodnessFit": [
+                    5,
+                    5
+               ],
+               "longestRepeatedSubstring": [
+                    5,
+                    5
+               ],
+               "excursion": [
+                    5,
+                    5
+               ],
+               "numDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "lenDirectionalRuns": [
+                    5,
+                    5
+               ],
+               "numIncreasesDecreases": [
+                    5,
+                    5
+               ],
+               "numRunsMedian": [
+                    5,
+                    5
+               ],
+               "lenRunsMedian": [
+                    5,
+                    5
+               ],
+               "avgCollision": [
+                    5,
+                    5
+               ],
+               "maxCollision": [
+                    5,
+                    5
+               ],
+               "periodicity(1)": [
+                    5,
+                    5
+               ],
+               "periodicity(2)": [
+                    5,
+                    5
+               ],
+               "periodicity(8)": [
+                    5,
+                    5
+               ],
+               "periodicity(16)": [
+                    5,
+                    5
+               ],
+               "periodicity(32)": [
+                    5,
+                    5
+               ],
+               "covariance(1)": [
+                    5,
+                    5
+               ],
+               "covariance(2)": [
+                    5,
+                    5
+               ],
+               "covariance(8)": [
+                    5,
+                    5
+               ],
+               "covariance(16)": [
+                    5,
+                    5
+               ],
+               "covariance(32)": [
+                    5,
+                    5
+               ],
+               "compression": [
+                    5,
+                    5
+               ]
+          },
+          "roundPass": 5,
+          "roundTotal": 5,
+          "platform": "4 dependent",
+          "filename": "./data/Example_decimate_bin_search_Mod4_relationship.bin",
+          "datestamp": "2024-07-12 22:24:27.884378"
+     },
+     {
+          "dec": 3,
+          "passList": {
+               "chiSqIndependence": [
+                    1,
+                    3
+               ],
+               "chiSqGoodnessFit": [
+                    1,
+                    1
+               ],
+               "longestRepeatedSubstring": [
+                    1,
+                    1
+               ],
+               "excursion": [
+                    1,
+                    1
+               ],
+               "numDirectionalRuns": [
+                    0,
+                    1
+               ],
+               "lenDirectionalRuns": [
+                    1,
+                    1
+               ],
+               "numIncreasesDecreases": [
+                    1,
+                    1
+               ],
+               "numRunsMedian": [
+                    0,
+                    1
+               ],
+               "lenRunsMedian": [
+                    1,
+                    1
+               ],
+               "avgCollision": [
+                    0,
+                    1
+               ],
+               "maxCollision": [
+                    1,
+                    1
+               ],
+               "periodicity(1)": [
+                    0,
+                    1
+               ],
+               "periodicity(2)": [
+                    1,
+                    1
+               ],
+               "periodicity(8)": [
+                    1,
+                    1
+               ],
+               "periodicity(16)": [
+                    1,
+                    1
+               ],
+               "periodicity(32)": [
+                    1,
+                    1
+               ],
+               "covariance(1)": [
+                    0,
+                    1
+               ],
+               "covariance(2)": [
+                    1,
+                    1
+               ],
+               "covariance(8)": [
+                    1,
+                    1
+               ],
+               "covariance(16)": [
+                    1,
+                    1
+               ],
+               "covariance(32)": [
+                    1,
+                    1
+               ],
+               "compression": [
+                    0,
+                    1
+               ]
+          },
+          "roundPass": 0,
+          "roundTotal": 3,
+          "platform": "4 dependent",
+          "filename": "temp_decimated_binary_search_data.bin",
+          "datestamp": "2024-07-12 22:31:45.124851"
+     }
+]
