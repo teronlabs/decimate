@@ -411,7 +411,8 @@ def failTable(numTests):
 
 
 # Purpose: Run IID testing on a decimated data file. Split the data into tests of 'setSize' deltas each, and record results of each test.
-#          Save results in the format of exampleResultsList to the results_path. If overwrite==False, the previous contents of results_path is also written.
+#          Save results in the format of exampleResultsList to the results_path. 
+#          If overwrite==False, the previous contents of results_path is also written.
 # Parameters:
 #       in_path: Path to decimated deltas; deltas must be 1 byte each, ready for the NIST tool to read.
 #       results_path: The path of the file where results should be written as they are generated.
@@ -435,18 +436,22 @@ def failTable(numTests):
 #       IID tests: The arguments to pass to iid_main from stats90b, e.g. if only the chi1 test should be performed, use "-r chi1".
 #             If testing for a single round should stop as soon as one of the 22 individual tests fails, use "-r abort1fail"
 #             Leaving the string empty is equivalent to running all IID tests without aborting the round on the first failure.
-# Return values: ('failure', 'totalPasses', 'totals', 'roundPassCount', 'roundTotalCount') 
+# Return values: ('failure', 'totalPasses', 'totals', 'roundPassCount', 'roundTotalCount', 'passOrderList') 
 #       failure: a boolean indicating whether the overall testing result for all rounds is a failure.
 #       totalPasses: a dictionary providing the number of total passes for each of the 22 individual IID tests.
 #       totals: a dictionary providing the total number of tests performed for each of the 22 individual IID tests.
 #       roundPassCount: How many testing rounds passed overall (i.e. how many rounds where all 22 different IID tests passed)
 #       roundTotalCount: How many testing rounds were carried out.
+#       passOrderList: Dictionary of dictionaries containing the order of passes and fails 
+#           for each type of IID test and each round. Pass = 0 and Fail = 1.
+#           May be used to find patterns of failure, e.g. every 4th test fails.
 # NOTE: results in the format of exampleResultsList will be written to the results_path. This is different to the format of the values retuned by the function.
 #       If overwrite==False, the previous contents of results_path is also written.
 #       The result of testing this decimation level is in the last item of the results list in the results_path.
 #       Results are written and overwritten as they are generated, so if the testing is killed before it completes, all results generated so far may be read from results_path.
 #
-def test_decimated_file(in_path, results_path, overwrite="", platform="<unspecified>", dec=0, numTests=1, maxFails=failTable, setSize=1000000, verboseRounds=True, verboseFinal=False, failEarly=False, 
+def test_decimated_file(in_path, results_path, overwrite="", platform="<unspecified>", dec=0, numTests=1, maxFails=failTable, 
+                        setSize=1000000, verboseRounds=True, verboseFinal=False, failEarly=False, 
                         messageStart="", messageEnd="", IIDtests=""):
 
     # Initialise status messages:
@@ -460,6 +465,7 @@ def test_decimated_file(in_path, results_path, overwrite="", platform="<unspecif
     totals = {}
     roundPassCount =0
     roundTotalCount =0
+    passOrderList = {}
     # Set a temporary file name for storing enough deltas for one round of testing.
     out_path = "temp_test_decimated_file.bin"
 
@@ -507,27 +513,39 @@ def test_decimated_file(in_path, results_path, overwrite="", platform="<unspecif
             # Assume this round of testing passed until proven otherwise.
             thisTestPass = True
 
-            # For each test name in the result dictionary, make sure it is in the dictionaries storing the number of passes and the total tests.
+            # For each test name in the result dictionary, make sure it is in the dictionaries storing: 
+            # - the number of passes for each type of IID test
+            # - the total tests for each type of IID test
+            # - the pass/fail order for each type of IID test (pass = 0, fail = 1)
+            # - the pass/fail order for each round (pass = 0, fail = 1).
             # If this test name is a pass, add it to the count of passes for that test.
             # Add one to the total count for that test.
             # If any test did not pass, note that this round of testing failed by setting thisTestPass = False.
             for testName in res.keys():
                 if testName not in totalPasses.keys():
                     totalPasses[testName]=0
+                    passOrderList[testName]={}
                 if testName not in totals.keys():
                     totals[testName]=0
+                    passOrderList['round']={}
                 if res[testName]=="pass":
                     totalPasses[testName] += 1
+                    passOrderList[testName][i]=0 #Record pass (i.e. 0) in the pass order.
                 else:
                     thisTestPass = False
+                    passOrderList[testName][i]=1 #Record fail (i.e. 1) in the pass order.
                 totals[testName] += 1
+                
 
                 # If this particular IID test name has failed more times than allowed, set the overall failure variable to True.
                 if totals[testName] - totalPasses[testName] > maxFails(numTests):
                     failure = True
-            #Record whether this round of 22 tests passed.
+            #Record whether this round of 22 tests (or fewer depending on parameters) passed.
             if thisTestPass:
+                passOrderList['round'][i]=0 #Record pass (i.e. 0) in the round pass order.
                 roundPassCount += 1
+            else:
+                passOrderList['round'][i]=1 #Record fail (i.e. 1) in the round pass order.
             roundTotalCount += 1
 
             # If printed output is required, write whether this round of testing passed or failed in a dictionary format.
@@ -541,9 +559,11 @@ def test_decimated_file(in_path, results_path, overwrite="", platform="<unspecif
             
             # Save the results to the results_path
             if i == 0:
-                result_append(results, dec, totalPasses, totals, roundPassCount, roundTotalCount, platform, filename=in_path, datestamp=str(datetime.datetime.now()))
+                result_append(results, dec, totalPasses, totals, roundPassCount, roundTotalCount, passOrderList, 
+                              platform, filename=in_path, datestamp=str(datetime.datetime.now()))
             else:
-                result_overwrite_last(results, dec, totalPasses, totals, roundPassCount, roundTotalCount, platform, filename=in_path, datestamp=str(datetime.datetime.now()))
+                result_overwrite_last(results, dec, totalPasses, totals, roundPassCount, roundTotalCount, passOrderList, 
+                                      platform, filename=in_path, datestamp=str(datetime.datetime.now()))
             result_write(results, results_path)
 
 
@@ -596,7 +616,7 @@ def test_decimated_file(in_path, results_path, overwrite="", platform="<unspecif
             print("-", minKey, end="")
         print(" |\n")
 
-    return failure, totalPasses, totals, roundPassCount, roundTotalCount
+    return failure, totalPasses, totals, roundPassCount, roundTotalCount, passOrderList
 
 
 # BinSearchItem is a class for faciliting a binary search of decimation levels.
@@ -757,11 +777,34 @@ exampleResultItem =      {
             2
         ]
     },
-    "roundPass": 2, # Number of passing rounds of testing carried out. One round consists of running each of the 22 (or fewer) IID tests once.
+    "roundPass": 2, # Number of passing rounds of testing carried out. 
+        #             One round consists of running each of the 22 (or fewer) IID tests once.
+    "passOrder": {  # Provides the pass or fail result of each test type in order; also the same for each round.
+        #             This can be used to look for patterns, e.g. every 4th test more likely to fail.
+        #             0 = Pass, 1 = Fail
+        "chiSqIndependence": {
+            "0": 0,  # chiSqIndependence test number 0 passed.
+            "1": 1,  # chiSqIndependence test number 1 failed.
+            "2": 0,  # chiSqIndependence test number 2 passed.
+            "3": 1,
+            "4": 1
+        },
+        "round": { # Whether each round passed or failed, in order. 0 = Pass, 1 = Fail
+            "0": 0, # Round 0 of testing passed
+            "1": 1, # Round 1 of testing failed
+            "2": 0, # Round 2 of testing passed
+            "3": 1,
+            "4": 1
+        },
+        "chiSqGoodnessFit": {
+            "0": 0, # ChiSqGoodnessFit passed for test 0 & test 1.
+            "1": 0
+        }
+    }
     "roundTotal": 5, # Number of rounds of testing carried out
     "platform": "OE # 1", # The identifier for the platform that produced the data
     "filename": "./data/Example_decimate_bin_search_File1.bin", # The name of the file containing un-decimated data
-    "datestamp": "2024-07-07 22:07:28.683159" # The time all round#Name of individual IID test carried outTotal rounds of testing ended.
+    "datestamp": "2024-07-07 22:07:28.683159" # The time all roundTotal rounds of testing ended.
     }
 exampleResultItem2 =     {
     "dec": 3,
@@ -776,6 +819,29 @@ exampleResultItem2 =     {
         ]
     },
     "roundPass": 4,
+    "passOrder": { 
+        "chiSqIndependence": {
+            "0": 0, 
+            "1": 0, 
+            "2": 0, 
+            "3": 0,
+            "4": 0
+        },
+        "round": { 
+            "0": 0,
+            "1": 1,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        },
+        "chiSqGoodnessFit": {
+            "0": 0,
+            "1": 1,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    }
     "roundTotal": 5,
     "platform": "OE # 1",
     "filename": "./data/Example_decimate_bin_search_File1.bin",
@@ -834,15 +900,19 @@ def result_write(results, results_path):
 #       passListTotals: The dictionary of individual IID tests stating how many tests were done in total, e.g. {"chiSqIndependence": 7, ...}
 #       roundPass: The total number of passing rounds (one round consists of all the individual tests being tested.)
 #       roundTotal: The total number of rounds completed.
+#       passOrderList: Dictionary of dictionaries containing the order of passes and fails 
+#           for each type of IID test and each round. Pass = 0 & Fail = 1.
 #       platform: A string that describes the data that were tested, e.g. the OE name, project name, etc.
 #       filename: The file path of the un-decimated deltas that were tested.
 #       datestamp: A string with the datestamp of when the testing completed.
 # Outcome:
 #   A new item with the details provided is appended to results.
 #
-def result_append(results, dec, passList, passListTotals, roundPass, roundTotal, platform="", filename="", datestamp=""):
+def result_append(results, dec, passList, passListTotals, roundPass, roundTotal, passOrderList, 
+                  platform="", filename="", datestamp=""):
     newRoundPass = {test:[passList[test], passListTotals[test]] for test in passList}
-    results.append({"dec": dec, "passList": newRoundPass, "roundPass": roundPass, "roundTotal": roundTotal, "platform": platform, "filename": filename, "datestamp": str(datestamp)})
+    results.append({"dec": dec, "passList": newRoundPass, "roundPass": roundPass, "passOrder": passOrderList, 
+                    "roundTotal": roundTotal, "platform": platform, "filename": filename, "datestamp": str(datestamp)})
 
 
 # Purpose: Sort the recorded results by the following values: platform, then decimation level, then total testing rounds, then total passing individual IID tests.
@@ -866,15 +936,19 @@ def result_sort(results):
 #       passListTotals: The dictionary of individual IID tests stating how many tests were done in total, e.g. {"chiSqIndependence": 7}
 #       roundPass: The total number of passing rounds (one round consists of all the individual tests being tested.)
 #       roundTotal: The total number of rounds completed.
+#       passOrderList: Dictionary of dictionaries containing the order of passes and fails 
+#           for each type of IID test and each round. Pass = 0 & Fail = 1.
 #       platform: A string that describes the data that were tested, e.g. the OE name, project name, etc.
 #       filename: The file path of the un-decimated deltas that were tested.
 #       datestamp: A string with the datestamp of when the testing completed.
 # Outcome:
 #   The last item in results is removed, and a new item with the details provided is appended in its place.
 #
-def result_overwrite_last(results, dec, passList, passListTotals, roundPass, roundTotal, platform="", filename="", datestamp=""):
+def result_overwrite_last(results, dec, passList, passListTotals, roundPass, roundTotal, passOrderList, 
+                          platform="", filename="", datestamp=""):
     results.pop()
-    result_append(results, dec, passList, passListTotals,  roundPass,  roundTotal, platform=platform, filename=filename, datestamp=datestamp)
+    result_append(results, dec, passList, passListTotals,  roundPass,  roundTotal, passOrderList, 
+                  platform=platform, filename=filename, datestamp=datestamp)
 
     
 
@@ -888,7 +962,9 @@ def result_overwrite_last(results, dec, passList, passListTotals, roundPass, rou
 #             test faillures will also be flagged with an *.
 #   testID: A string containing the name of the individual IID test to check. 
 #           If testID="", the 'worst' test is selected and checked. 
-#           'Worst' means the tests having the lowest number of passes, and of those, the test with the maximum total tests.
+#           'Worst' is chosen from the failing tests, or if none fail, from all tests.
+#                Within those tests, 'worst' means the tests having the lowest number of passes, and of those, 
+#                 the test with the maximum total tests.
 #   maxFails: A function which takes as input the number of tests and 
 #             returns the maximum number of failing tests compatible with an overall pass.
 #             E.g. if at least 147 passes out of 150 tests is required to declare a pass over the 150 tests, then 
@@ -907,14 +983,32 @@ def result_outcome(results, resNum, minTests, testID="", maxFails=failTable):
     # Find how many tests passed for test 'testID', or the minimum if testID == ""
     # Also find the maximum total out of which there were this many passes.
     if testID == "":
-        passing = min(map(itemgetter(0),results[resNum]["passList"].values()))
-        testIDs = { t:results[resNum]["passList"][t] \
-                    for t in [test for test in results[resNum]["passList"].keys() if results[resNum]["passList"][test][0] == passing]}
+        # Make a list of all the tests that fail. These will be searched for the worst one:
+        testsToSearch = {test: results[resNum]["passList"][test]
+                        for test in results[resNum]["passList"].keys() 
+                        if (results[resNum]["passList"][test][1] - results[resNum]["passList"][test][0]) > 
+                        maxFails(results[resNum]["passList"][test][1])}
+        
+        # If there are no failing tests, make testsToSearch to be all tests instead.
+        # These will be searched for the worst passing test:
+        if len(testsToSearch)==0:
+            testsToSearch = results[resNum]["passList"]
+        
+        # Now find the worst test in the testsToSearch list.
+        # The worst test has the minimum number of passes, and of those, the maximum number of tests run.
+        # 'passing' is the minimum number of passes in the testsToSearch.
+        passing = min(map(itemgetter(0),testsToSearch.values()))
+        # testIDs contains the tests that have exactly 'passing' number of passes.
+        testIDs = { t:testsToSearch[t] \
+                    for t in [test for test in testsToSearch.keys() if testsToSearch[test][0] == passing]}
+        # 'total' is the maximum number of tests run for the tests in 'testIDs'.
         total = max(map(itemgetter(1), testIDs.values()))
+        # 'testID' is a list of tests with the number of passes == 'passing' and total tests run == 'total'.
         testID = [k for k in testIDs.keys() if testIDs[k][1]==total][0]
     else:
-        passing = results[resNum]["passList"][testID][0]
-        total = results[resNum]["passList"][testID][1]
+        testsToSearch = results[resNum]["passList"]
+        passing = testsToSearch[testID][0]
+        total = testsToSearch[testID][1]
 
 
     # Find the maximum number of fails to still pass for the actual number of rounds tested.
@@ -1514,7 +1608,8 @@ def decimated_binary_search(delta_path, results_path, overwrite=False, platform=
             # We are doing no tests, probably due to insufficient data; go to the right as this will give a smaller decimation level 
             # which is more likely to have enough data.
             tree[dec].set_results(True, {}, {}, 0, 0)
-            result_append(results, dec= dec * dec_multiplier, passList = {}, passListTotals={}, roundPass=0, roundTotal=0, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now())) 
+            result_append(results, dec= dec * dec_multiplier, passList = {}, passListTotals={}, roundPass=0, roundTotal=0, 
+                          passOrderList={}, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now())) 
             result_write(results, results_path)
             dec = tree[dec].right
         else:
@@ -1524,14 +1619,15 @@ def decimated_binary_search(delta_path, results_path, overwrite=False, platform=
             tempFileCreated=True
 
             # Do the decimation testing.
-            failed, b, c, d, e = test_decimated_file(dec_path, results_path, overwrite, platform, dec*dec_multiplier, numTests, maxFails, testSize, verbose, False, failEarly, 
+            failed, b, c, d, e, f = test_decimated_file(dec_path, results_path, overwrite, platform, dec*dec_multiplier, numTests, maxFails, testSize, verbose, False, failEarly, 
                                             "Starting testing for decimation level " + f"{(dec*dec_multiplier):,d}" + " ...",
                                             "Overall result for decimation = " + f"{(dec*dec_multiplier):,d}" + ":", IIDtests)
 
             # Save the results of the decimation testing in the binary tree.
             tree[dec].set_results(failed, b, c, d, e)
             # Save the results in the 'results' list as well as writing the updated list to the results_path.
-            result_append(results, dec= dec * dec_multiplier, passList = b, passListTotals=c, roundPass=d, roundTotal=e, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now()))
+            result_append(results, dec= dec * dec_multiplier, passList = b, passListTotals=c, roundPass=d, roundTotal=e, 
+                          passOrderList=f, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now()))
             result_write(results, results_path)
 
             if failed:
@@ -1624,7 +1720,8 @@ def decimated_range_test(delta_path, results_path, overwrite=False, platform="",
         if numTests == 0:
             # We are doing no tests, probably due to insufficient data; go to the right as this will give a smaller decimation level 
             # which is more likely to have enough data.
-            result_append(results, dec= dec * dec_multiplier, passList = {}, passListTotals={}, roundPass=0, roundTotal=0, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now())) 
+            result_append(results, dec= dec * dec_multiplier, passList = {}, passListTotals={}, roundPass=0, roundTotal=0, 
+                          passOrderList={}, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now())) 
             result_write(results, results_path)
         else:
             # Decimate the data and save it in the temporary file path.
@@ -1633,12 +1730,14 @@ def decimated_range_test(delta_path, results_path, overwrite=False, platform="",
             tempFileCreated=True
 
             # Do the decimation testing.
-            failed, b, c, d, e = test_decimated_file(dec_path, results_path, overwrite, platform, dec*dec_multiplier, numTests, maxFails, testSize, verbose, False, failEarly, 
+            failed, b, c, d, e, f = test_decimated_file(dec_path, results_path, overwrite, platform, dec*dec_multiplier, 
+                                            numTests, maxFails, testSize, verbose, False, failEarly, 
                                             "Starting testing for decimation level " + f"{(dec*dec_multiplier):,d}" + " ...",
                                             "Overall result for decimation = " + f"{(dec*dec_multiplier):,d}" + ":", IIDtests)
 
             # Save the results in the 'results' list as well as writing the updated list to the results_path.
-            result_append(results, dec= dec * dec_multiplier, passList = b, passListTotals=c, roundPass=d, roundTotal=e, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now()))
+            result_append(results, dec= dec * dec_multiplier, passList = b, passListTotals=c, roundPass=d, roundTotal=e, 
+                          passOrderList=f, platform=platform, filename=delta_path, datestamp=str(datetime.datetime.now()))
             result_write(results, results_path)
 
     # we are finished testing and can find the lowest passing decimation level and return the results.
