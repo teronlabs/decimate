@@ -239,6 +239,7 @@ def unchanged(delta):
         * The ith sub-distribution is from subdist_cutoffs[i] to subdist_cutoffs[i+1]-1
         * The last sub-distribution is from subdist_cutoffs[-1] to the maximum delta.
         * There are len(subdist_cutoffs) + 1 sub-distributions.
+    * verbose: Set to True if a count of the samples written should be printed.
     * byte_order: The order of the bytes of each delta in the in_path file and out_path file (e.g. 'little')
     * writeText: Whether the subdistribution number should be written as text (0-9 then A-Z) rather than a binary value.
         * NOTE: If writeText is True, there must be 36 or fewer subdistributions (i.e. len(subdist_cutoffs) <= 35)
@@ -326,12 +327,13 @@ def unchanged(delta):
         * e.g. if only the chi1 test should be performed, use "-r chi1". 
         * If testing for a single round should stop as soon as one of the 22 individual tests fails, include "-r abort1fail" 
         * Leaving the string empty is equivalent to running all IID tests without aborting the round on the first failure.
-* Return values: ('failure', 'totalPasses', 'totals', 'roundPassCount', 'roundTotalCount') 
+* Return values: ('failure', 'totalPasses', 'totals', 'roundPassCount', 'roundTotalCount', 'passOrderList') 
     * failure: a boolean indicating whether the overall testing result for all rounds is a failure.
     * totalPasses: a dictionary providing the number of total passes for each of the 22 individual IID tests.
     * totals: a dictionary providing the total number of tests performed for each of the 22 individual IID tests.
     * roundPassCount: How many testing rounds passed overall (i.e. how many rounds where all 22 different IID tests passed)
     * roundTotalCount: How many testing rounds were carried out.
+    * passOrderList: Dictionary of dictionaries containing the order of passes and fails for each type of IID test and each round. Pass = 0 and Fail = 1. May be used to find patterns of failure, e.g. every 4th test fails.
     * NOTE: 
         * results in the format of exampleResultsList will be written to the results_path. This is different to the format of the values retuned by this function. 
         * If overwrite==False, the previous content of results_path is also written to the results_path.
@@ -340,7 +342,7 @@ def unchanged(delta):
         * No other process should attempt to write to results_path while this function is running to avoid loss of data.
 * Usage:
 
-    (failure, totalPasses, totals, roundPassCount, roundTotalCount) = test_decimated_file(in_path, results_path, overwrite="", platform="<unspecified>", dec=0, numTests=1, maxFails=failTable, setSize=1000000, verboseRounds=True, verboseFinal=False, failEarly=False, messageStart="", messageEnd="", IIDtests="")
+    (failure, totalPasses, totals, roundPassCount, roundTotalCount, passOrderList) = test_decimated_file(in_path, results_path, overwrite="", platform="<unspecified>", dec=0, numTests=1, maxFails=failTable, setSize=1000000, verboseRounds=True, verboseFinal=False, failEarly=False, messageStart="", messageEnd="", IIDtests="")
 
 ### decimated_binary_search
 
@@ -373,7 +375,7 @@ def unchanged(delta):
     * passedLevels = [passLevel, passStarLevel]
         * passLevel = None if no round has a worst test that passed with at least numTestsRequested tests. Otherwise, the minimim decimation level with a passing worst test having at least numTestsRequested tests.
         * passStarLevel = None if no round has a worst test that passed (including rounds/tests with less than numTestsRequested tests). Otherwise, the minimim decimation level with a worst test that passed (including rounds/tests with less than numTestsRequested tests).
-        * 'Worst' means the test(s) having the lowest number of passes, and of those, the test(s) with the maximum total tests.
+        * 'Worst' is chosen from the failing tests, or from all tests if none fail. 'Worst' means the test(s) having the lowest number of passes, and of those, the test(s) with the maximum total tests.
     * NOTE: 
         * If verbose is True, results are printed as they are generated. However, for a nicely formatted summary of results, call the result_print function after calling this one. Function result_print will sort the results by decimation level if requested.
         * results in the format of exampleResultsList will be written to the results_path. If overwrite==False, the previous contents of results_path is also written.
@@ -382,7 +384,7 @@ def unchanged(delta):
         * No other process should attempt to write to results_path while this function is running to avoid loss of data.
 * Usage:
 
-    results, datestampList, passed, best_decimation_level = decimated_binary_search(delta_path, results_path, overwrite=False, platform="", maxDec=200, minDec=1, numTestsRequested=1, maxFails=failTable, testSize=1000000, dec_multiplier=1, input_delta_bytes=1, convert_delta=unchanged, byte_order='little', verbose=False, failEarly=False, IIDtests="")
+    results, datestampList, passedLevels = decimated_binary_search(delta_path, results_path, overwrite=False, platform="", maxDec=200, minDec=1, numTestsRequested=1, maxFails=failTable, testSize=1000000, dec_multiplier=1, input_delta_bytes=1, convert_delta=unchanged, byte_order='little', verbose=False, failEarly=False, IIDtests="")
 
 ### decimated_range_test
 
@@ -415,7 +417,7 @@ def unchanged(delta):
     * passedLevels = [passLevel, passStarLevel]
         * passLevel = None if no round has a worst test that passed with at least numTestsRequested tests. Otherwise, the minimim decimation level with a passing worst test having at least numTestsRequested tests.
         * passStarLevel = None if no round has a worst test that passed (including rounds/tests with less than numTestsRequested tests). Otherwise, the minimim decimation level with a worst test that passed (including rounds/tests with less than numTestsRequested tests).
-        * 'Worst' means the test(s) having the lowest number of passes, and of those, the test(s) with the maximum total tests.
+        * 'Worst' is chosen from the failing tests, or from all tests if none fail. 'Worst' means the test(s) having the lowest number of passes, and of those, the test(s) with the maximum total tests.
     * NOTE: 
         * If verbose is True, results are printed as they are generated. However, for a nicely formatted summary of results, call the result_print function after calling this one. Function result_print will sort the results by decimation level if requested.
         * results in the format of exampleResultsList will be written to the results_path. If overwrite==False, the previous contents of results_path is also written.
@@ -424,7 +426,7 @@ def unchanged(delta):
         * No other process should attempt to write to results_path while this function is running to avoid loss of data.
 * Usage:
 
-    results, datestampList, passed, best_decimation_level = decimated_range_test(delta_path, results_path, overwrite=False, platform="", maxDec=200, minDec=1, numTestsRequested=1, maxFails=failTable, testSize=1000000, dec_multiplier=1, input_delta_bytes=1, convert_delta=unchanged, byte_order='little', verbose=False, failEarly=False, IIDtests="")
+    results, datestampList, passedLevels = decimated_range_test(delta_path, results_path, overwrite=False, platform="", maxDec=200, minDec=1, numTestsRequested=1, maxFails=failTable, testSize=1000000, dec_multiplier=1, input_delta_bytes=1, convert_delta=unchanged, byte_order='little', verbose=False, failEarly=False, IIDtests="")
 
 ## Functions for Results (open, write, append, sort, outcome, datestamp_range, print)
 
@@ -447,6 +449,28 @@ Results used by these functions have the following format:
             },
             "roundPass": 2, # Number of passing rounds of testing completed. 
                 # One round consists of running each of the 22 (or fewer) IID tests once.
+            "passOrder": {  # Provides the pass or fail result of each test type in order; also the same for each round.
+                #             This can be used to look for patterns, e.g. every 4th test more likely to fail.
+                #             0 = Pass, 1 = Fail
+                "chiSqIndependence": {
+                    "0": 0,  # chiSqIndependence test number 0 passed.
+                    "1": 1,  # chiSqIndependence test number 1 failed.
+                    "2": 0,  # chiSqIndependence test number 2 passed.
+                    "3": 1,
+                    "4": 1
+                },
+                "round": { # Whether each round passed or failed, in order. 0 = Pass, 1 = Fail
+                    "0": 0, # Round 0 of testing passed
+                    "1": 1, # Round 1 of testing failed
+                    "2": 0, # Round 2 of testing passed
+                    "3": 1,
+                    "4": 1
+                },
+                "chiSqGoodnessFit": {
+                    "0": 0, # ChiSqGoodnessFit passed for test 0 & test 1.
+                    "1": 0
+                }
+            }
             "roundTotal": 5, # Number of rounds of testing carried out.
             "platform": "OE # 1", # The identifier for the platform that produced the data.
             "filename": "./data/Example_decimate_bin_search_File1.bin", # The name of the file containing un-decimated data.
@@ -489,6 +513,7 @@ Results used by these functions have the following format:
         * passListTotals: The dictionary of individual IID tests stating how many tests were done in total, e.g. {"chiSqIndependence": 7, ...}
         * roundPass: The total number of passing rounds (one round consists of all the individual tests being tested.)
         * roundTotal: The total number of rounds completed.
+        * passOrderList: Dictionary of dictionaries containing the order of passes and fails for each type of IID test and each round. Pass = 0 & Fail = 1.
         * platform: A string that describes the data that were tested, e.g. the OE name, project name, etc.
         * filename: The file path of the un-decimated deltas that were tested.
         * datestamp: A string with the datestamp of when the testing completed.
@@ -496,7 +521,7 @@ Results used by these functions have the following format:
     * Results is modified by having a new item with the details provided appended. The function does not have a return value.
 * Usage:
 
-    result_append(results, dec, passList, passListTotals, roundPass, roundTotal, platform="", filename="", datestamp="")
+    result_append(results, dec, passList, passListTotals, roundPass, roundTotal, passOrderList, platform="", filename="", datestamp="")
 
 ### result_sort
 
@@ -517,19 +542,20 @@ Results used by these functions have the following format:
     * minTests: A desired minimum number of tests or rounds to be carried out. Passing tests having fewer than minTests rounds will be flagged with an `*`. Fails with fewer than maxFails(minTests) test faillures will also be flagged with an `*`.
     * testID: A string containing the name of the individual IID test to check. 
         * If testID="", the 'worst' test is selected and checked. 
-        * 'Worst' means the test(s) having the lowest number of passes, and of those, the test(s) with the maximum total tests.
+        * 'Worst' is chosen from the failing tests, or from all tests if none fail. 'Worst' means the test(s) having the lowest number of passes, and of those, the test(s) with the maximum total tests.
     * maxFails: A function which takes as input the number of tests and returns the maximum number of failing tests compatible with an overall pass.
         * E.g. if at least 147 passes out of 150 tests is required to declare a pass over the 150 tests, then maxFails(150) returns 3 = 150 - 147.
         * Typically, the provided 'failTable' function is used, but users may supply their own if desired.
-* Return value: outcome
+* Return values: outcome, needStarMessage
     * outcome has the following possible values and meanings:
         * "FAIL" - Enough individual tests failed that the overall result is a fail, whether the cutoff is for the actual number of rounds or the minimum number of rounds.
         * "FAIL *" - The actual number of rounds failed, but not enough rounds were tested to know if it would have failed if the requested number of rounds were tested.
         * "pass *" - The actual number of rounds passed, but less than the requested minimum number of rounds were tested.
         * "pass" - At least the requested minimum number of rounds were tested and they passed.
+    * needStarMessage: True when the outcome was "FAIL *" or "pass *"
 * Usage:
 
-    result_outcome(results, resNum, minTests, testID="", maxFails=failTable)
+    outcome, needStarMessage = result_outcome(results, resNum, minTests, testID="", maxFails=failTable)
 
 ### result_datestamp_range
 * Purpose: Return a list of results containing only those results in the specified dateRange.
@@ -569,7 +595,7 @@ Results used by these functions have the following format:
         * When True, results for each of the individual IID tests in the "passList" are printed for each result item, one per line.
         * When False, each result item is summarised in a single line of output, with only the results of the worst individual IID test listed.
         * NOTE: When printAllIndividTestResults = False, if more than one individual IID test is 'worst', only one is printed.
-        * NOTE: 'worst' is considered to be the test(s) with the minimum number of passes, and of those, the test(s) with the maximum number of tests.
+        * NOTE: 'Worst' is chosen from the failing tests, or from all tests if none fail. 'Worst' is considered to be the test(s) with the minimum number of passes, and of those, the test(s) with the maximum number of tests.
     * printSorted: Set to True if a copy of the resultsList should be sorted before printing. Otherwise, results are grouped by platform but printed unsorted.
         * NOTE: A copy of the resultsList is sorted before the results are printed, so that the original list remains unsorted but the results are printed in a sorted order.
 * Usage:
@@ -581,7 +607,7 @@ Results used by these functions have the following format:
 
 * Purpose: Return the minimum passing decimation level for the requested results.
 * Parameters:
-    * resultsList: A list of individual Decimation test results. Each result in the list is a dictionary with the same structure as the exampleResultItem.
+    * results: A list of individual Decimation test results. Each result in the list is a dictionary with the same structure as the exampleResultItem.
     * maxFails:   A function which takes as input the number of tests and returns the maximum number of failing tests compatible with an overall pass.
         * E.g. if at least 147 passes out of 150 tests is required to declare a pass over the 150 tests, then maxFails(150) returns 3 = 150 - 147.
         * Typically, the provided 'failTable' function is used, but users may supply their own if desired.
@@ -597,7 +623,7 @@ Results used by these functions have the following format:
 * Return value: [minPassingDecLevel, minPassingStarDecLevel]
     * minPassingDecLevel: For the 'worst' individual IID test with at least minTests tests from each result item checked, the minimum passing decimation level.
     * minPassingStarDecLevel: For the 'worst' individual IID test (with any number of tests > 0) from each result item checked, the minimum passing decimation level.
-    * NOTE: 'worst' is considered to be the test(s) with the minimum number of passes, and of those, the test(s) with the maximum number of tests.
+    * NOTE: 'Worst' is chosen from the failing tests, or from all tests if none fail. 'Worst' is considered to be the test(s) with the minimum number of passes, and of those, the test(s) with the maximum number of tests.
 * Usage:
 
     [minPassingDecLevel, minPassingStarDecLevel] = result_min_pass_level(results, maxFails=failTable, minTests=1, checkLowRounds=True, platformList=[], dateRange=["",""])
