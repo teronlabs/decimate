@@ -800,7 +800,7 @@ exampleResultItem =      {
             "0": 0, # ChiSqGoodnessFit passed for test 0 & test 1.
             "1": 0
         }
-    }
+    },
     "roundTotal": 5, # Number of rounds of testing carried out
     "platform": "OE # 1", # The identifier for the platform that produced the data
     "filename": "./data/Example_decimate_bin_search_File1.bin", # The name of the file containing un-decimated data
@@ -841,7 +841,7 @@ exampleResultItem2 =     {
             "3": 0,
             "4": 0
         }
-    }
+    },
     "roundTotal": 5,
     "platform": "OE # 1",
     "filename": "./data/Example_decimate_bin_search_File1.bin",
