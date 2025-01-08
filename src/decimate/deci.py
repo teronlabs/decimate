@@ -970,7 +970,7 @@ def result_overwrite_last(results, dec, passList, passListTotals, roundPass, rou
 #             E.g. if at least 147 passes out of 150 tests is required to declare a pass over the 150 tests, then 
 #             maxFails(150) returns 3 = 150 - 147.
 #             Typically, the provided 'failTable' function is used, but users may supply their own if desired.
-# Return value: outcome
+# Return values: outcome, needStarMessage
 #   outcome has the following possible values and meanings:
 #       "FAIL" - Enough individual tests failed that the overall result is a fail,
 #                    whether the cutoff is for the actual number of rounds or the minimum number of rounds.
@@ -978,6 +978,7 @@ def result_overwrite_last(results, dec, passList, passListTotals, roundPass, rou
 #                    have failed if the requested number of rounds were tested.
 #       "pass *" - The actual number of rounds passed, but less than the requested minimum number of rounds were tested.
 #       "pass" - At least the requested minimum number of rounds were tested and they passed.
+#  needStarMessage: True when the outcome was "FAIL *" or "pass *"
 def result_outcome(results, resNum, minTests, testID="", maxFails=failTable):
     needStarMessage = False
     # Find how many tests passed for test 'testID', or the minimum if testID == ""
@@ -1107,7 +1108,8 @@ def result_datestamp_range(results, dateRange):
 #       printAllIndividTestResults: When True, results for each of the individual IID tests in the "passList" are printed for each result item, one per line.
 #                   When False, each result item is summarised in a single line of output, with only the results of the worst individual IID test listed.
 #                   NOTE: When printAllIndividTestResults = False, if more than one individual IID test is 'worst', only one is printed.
-#                   NOTE: 'worst' is considered to be the tests with the minimum number of passes, and of those, the test with the maximum number of tests.
+#                   NOTE: 'Worst' is chosen from the failing tests, or from all tests if none fail. 
+#                         'Worst' is considered to be the tests with the minimum number of passes, and of those, the test with the maximum number of tests.
 #       printSorted: Set to True if a copy of the resultsList should be sorted before printing. Otherwise, results are grouped by platform but printed unsorted.
 #                       NOTE: A copy of the resultsList is sorted before the results are printed, so that the original list 
 #                             remains unsorted but the results are printed in a sorted order.
@@ -1430,7 +1432,8 @@ def result_print(resultsList, maxFails=failTable, minTests=1, printLowRounds=Tru
 #                   NOTE: An example of a full datestamp is: "2024-07-08 09:52:44.204973" - even if the datestamps printed are truncated.
 #                       If you use shorter strings in the dateRange, make sure that the when sorted, the full datestamp strings in the results
 #                       fall between the strings you specify (e.g. you may need to add a second to the last datestamp to retrieve all desired items).
-#        NOTE: 'worst' is considered to be the test(s) with the minimum number of passes, and of those, the test(s) with the maximum number of tests.
+#        NOTE: 'Worst' is chosen from the failing tests, or from all tests if none fail. 
+#              'Worst' is considered to be the test(s) with the minimum number of passes, and of those, the test(s) with the maximum number of tests.
 
 def result_min_pass_level(results, maxFails=failTable, minTests=1, checkLowRounds=True, platformList=[], dateRange=["",""]):
 
